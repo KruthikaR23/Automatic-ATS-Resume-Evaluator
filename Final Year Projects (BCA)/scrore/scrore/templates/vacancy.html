@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Available Roles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: #0f2027;  /* sci-fi dark theme */
+      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00fff0;
+      font-size: 2.8rem;
+      margin-bottom: 2rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { text-shadow: 0 0 10px #00fff0; }
+      50% { text-shadow: 0 0 25px #00fff0; }
+      100% { text-shadow: 0 0 10px #00fff0; }
+    }
+
+    .roles-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 1rem;
+    }
+
+    .role-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 0 12px #00fff0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .role-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px #00fff0;
+    }
+
+    .role-title {
+      font-size: 1.5rem;
+      color: #00fff0;
+      margin-bottom: 0.8rem;
+    }
+
+    .role-desc {
+      font-size: 0.95rem;
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    .keywords {
+      font-size: 0.85rem;
+      color: #a0e0e0;
+      margin-bottom: 1rem;
+    }
+
+    .apply-btn {
+      background-color: #00fff0;
+      color: #000;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .apply-btn:hover {
+      background-color: #00d2c5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Explore Our Job Vacancies</h1>
+  <div class="roles-container">
+
+    <div class="role-card">
+      <div class="role-title">Front-End Developer</div>
+      <div class="role-desc">Craft stunning user interfaces with the latest web technologies.</div>
+      <div class="keywords">React, HTML/CSS, JavaScript, Tailwind, Responsive UI</div>
+      <button class="apply-btn" onclick="apply('Front-End Developer')">Apply Now</button>
+    </div>
+
+    <div class="role-card">
+      <div class="role-title">Data Analyst</div>
+      <div class="role-desc">Uncover insights through dashboards and data storytelling.</div>
+      <div class="keywords">SQL, Power BI, Python, Tableau, Pandas</div>
+      <button class="apply-btn" onclick="apply('Data Analyst')">Apply Now</button>
+    </div>
+
+    <div class="role-card">
+      <div class="role-title">DevOps Developer</div>
+      <div class="role-desc">Streamline deployments and infrastructure in the cloud.</div>
+      <div class="keywords">AWS, Jenkins, Docker, Kubernetes, CI/CD</div>
+      <button class="apply-btn" onclick="apply('DevOps Developer')">Apply Now</button>
+    </div>
+
+    <div class="role-card">
+      <div class="role-title">UI/UX Designer</div>
+      <div class="role-desc">Design intuitive experiences that delight users.</div>
+      <div class="keywords">Figma, Prototyping, User Research, Accessibility</div>
+      <button class="apply-btn" onclick="apply('UI/UX Designer')">Apply Now</button>
+    </div>
+
+    <div class="role-card">
+      <div class="role-title">Web Developer</div>
+      <div class="role-desc">Develop functional and scalable websites and web apps.</div>
+      <div class="keywords">PHP, Node.js, MySQL, JavaScript, CMS</div>
+      <button class="apply-btn" onclick="apply('Web Developer')">Apply Now</button>
+    </div>
+
+    <div class="role-card">
+      <div class="role-title">Software Engineer</div>
+      <div class="role-desc">Build clean, scalable software using modern programming practices.</div>
+      <div class="keywords">Java, Python, C++, Microservices, OOP</div>
+      <button class="apply-btn" onclick="apply('Software Engineer')">Apply Now</button>
+    </div>
+
+  </div>
+
+  <script>
+    function apply(role) {
+      // Redirect to /dashboard with selected role as query param
+      window.location.href = `/dashboard?role=${encodeURIComponent(role)}`;
+    }
+  </script>
+</body>
+</html>

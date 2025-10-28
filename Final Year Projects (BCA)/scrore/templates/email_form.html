@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Send Email Confirmation with Grid</title>
+<style>
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    position: relative;
+    color: #7ec0ff;
+  }
+
+  /* Blue pulsing radial background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -2;
+    background: radial-gradient(circle, #07296c 10%, #010f2a 100%);
+    animation: pulse 8s infinite alternate;
+  }
+  @keyframes pulse {
+    0% { filter: brightness(1); }
+    100% { filter: brightness(1.1); }
+  }
+
+  /* The SVG grid container */
+  .background-grid {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.15;
+    animation: gridShift 15s linear infinite;
+  }
+
+  /* Style the SVG lines */
+  .background-grid .grid-line {
+    stroke: #7ec0ff;
+    stroke-width: 0.5;
+    stroke-opacity: 0.3;
+  }
+
+  /* Slow horizontal shift animation for subtle movement */
+  @keyframes gridShift {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* Centered container */
+  .container {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(1, 15, 42, 0.85);
+    border-radius: 12px;
+    padding: 30px 40px;
+    max-width: 450px;
+    width: 90%;
+    box-shadow:
+      0 0 20px rgba(7, 41, 108, 0.6),
+      0 0 40px rgba(7, 41, 108, 0.4);
+  }
+
+  h1 {
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 0 10px #7ec0ff;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  input[type="email"],
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #7ec0ff;
+    border-radius: 6px;
+    background: transparent;
+    color: #7ec0ff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  input[type="email"]:focus,
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: #7ec0ff;
+    box-shadow: 0 0 8px #7ec0ff;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px 0;
+    background: #7ec0ff;
+    border: none;
+    border-radius: 8px;
+    color: #010f2a;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 0 15px #7ec0ff;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #5ea0e0;
+  }
+  ul {
+    margin-bottom: 20px;
+  }
+  li {
+    list-style: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 0 0 5px #010f2a;
+  }
+  /* Popup styles */
+  .popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0f0a31;
+    color: #7efcdb;
+    border: 2px solid #7efcdb;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #7efcdb;
+    font-weight: 700;
+    font-size: 1.1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 9999;
+    max-width: 320px;
+  }
+  .popup.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .popup-close {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 22px;
+    color: #7efcdb;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Background SVG Grid -->
+<div class="background-grid" aria-hidden="true">
+  <svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" >
+    <g>
+      <line x1="10" y1="0" x2="10" y2="100" class="grid-line" />
+      <line x1="30" y1="0" x2="30" y2="100" class="grid-line" />
+      <line x1="50" y1="0" x2="50" y2="100" class="grid-line" />
+      <line x1="70" y1="0" x2="70" y2="100" class="grid-line" />
+      <line x1="90" y1="0" x2="90" y2="100" class="grid-line" />
+    </g>
+    <g>
+      <line x1="0" y1="10" x2="100" y2="10" class="grid-line" />
+      <line x1="0" y1="30" x2="100" y2="30" class="grid-line" />
+      <line x1="0" y1="50" x2="100" y2="50" class="grid-line" />
+      <line x1="0" y1="70" x2="100" y2="70" class="grid-line" />
+      <line x1="0" y1="90" x2="100" y2="90" class="grid-line" />
+    </g>
+  </svg>
+</div>
+
+<!-- Centered Email Form -->
+<div class="container">
+  <h1>Send Email Confirmation</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+      {% for category, message in messages %}
+        <li style="color: {% if category == 'success' %}#0f0{% else %}#f44{% endif %};">{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    <label for="to_email">To (Candidate Email):</label>
+    <input type="email" name="to_email" id="to_email" required />
+
+    <label for="subject">Subject:</label>
+    <input type="text" name="subject" id="subject" required />
+
+    <label for="body">Body:</label>
+    <textarea name="body" id="body" rows="8" required></textarea>
+
+    <button type="submit">Send Email</button>
+  </form>
+</div>
+
+<!-- Popup container -->
+<div id="popup" class="popup" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="popup-content">
+    <span id="popup-close" class="popup-close" aria-label="Close popup">&times;</span>
+    <p id="popup-message"></p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get flashed messages from Flask, safely parse as JSON
+    const messages = {{ get_flashed_messages(with_categories=true) | tojson | safe }};
+
+    let successMessage = null;
+    for (const [category, msg] of messages) {
+      if (category === 'success') {
+        successMessage = msg;
+        break;
+      }
+    }
+
+    if (successMessage) {
+      const popup = document.getElementById('popup');
+      const messageElem = document.getElementById('popup-message');
+      const closeBtn = document.getElementById('popup-close');
+
+      messageElem.textContent = successMessage;
+      popup.classList.add('show');
+
+      closeBtn.addEventListener('click', () => {
+        popup.classList.remove('show');
+      });
+
+      // Auto-hide popup after 5 seconds
+      setTimeout(() => {
+        popup.classList.remove('show');
+      }, 5000);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - ATS Evaluator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0a0f2f, #151a44);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #cbd5e1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.15;
+    }
+
+    .background-grid svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .grid-line {
+      stroke: #3b5f9a;
+      stroke-width: 0.5;
+      stroke-opacity: 0.3;
+      filter: drop-shadow(0 0 3px #2a6ab8);
+      animation: pulseGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        stroke-opacity: 0.2;
+        filter: drop-shadow(0 0 3px #4466af);
+      }
+      100% {
+        stroke-opacity: 0.6;
+        filter: drop-shadow(0 0 8px #60a5fa);
+      }
+    }
+
+    .login-container {
+      position: relative;
+      background: rgba(20, 30, 50, 0.95);
+      padding: 45px 35px 50px;
+      width: 400px;
+      border-radius: 18px;
+      box-shadow: 0 0 20px #0a1933cc;
+      z-index: 1;
+      animation: flickerGlow 6s infinite alternate;
+    }
+
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border-radius: 24px;
+      background: linear-gradient(270deg, #184361, #2f4d8e, #03234b, #184daf);
+      background-size: 600% 600%;
+      animation: glowShift 8s ease infinite;
+      filter: drop-shadow(0 0 12px #10107c);
+      z-index: -1;
+    }
+
+    @keyframes glowShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes flickerGlow {
+      0% { box-shadow: 0 0 15px #103b7eaa; }
+      100% { box-shadow: 0 0 30px #032146ee; }
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      color: #2b58c2;
+      text-align: center;
+      text-shadow: 0 0 10px #192cb5;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      border: 2px solid #042f31;
+      background: #111827;
+      color: #cbd5e1;
+      font-size: 1rem;
+      box-shadow: 0 0 6px #0b509966;
+      transition: 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #5e82ae;
+      box-shadow: 0 0 12px #102269bb;
+      outline: none;
+    }
+
+    .error-message {
+      color: #f87171;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    button {
+      padding: 14px;
+      background: #0f4976;
+      border: none;
+      border-radius: 14px;
+      color: #0f172a;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 0 20px #2698deaa;
+      transition: 0.3s ease;
+    }
+
+    button:hover,
+    button:focus {
+      background-color: #05214e;
+      color: white;
+      box-shadow: 0 0 25px #24456e;
+      outline: none;
+    }
+
+    @media (max-width: 400px) {
+      .login-container {
+        width: 90vw;
+        padding: 30px 20px 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-grid" aria-hidden="true">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        <line x1="10" y1="0" x2="10" y2="100" class="grid-line" />
+        <line x1="30" y1="0" x2="30" y2="100" class="grid-line" />
+        <line x1="50" y1="0" x2="50" y2="100" class="grid-line" />
+        <line x1="70" y1="0" x2="70" y2="100" class="grid-line" />
+        <line x1="90" y1="0" x2="90" y2="100" class="grid-line" />
+      </g>
+      <g>
+        <line x1="0" y1="10" x2="100" y2="10" class="grid-line" />
+        <line x1="0" y1="30" x2="100" y2="30" class="grid-line" />
+        <line x1="0" y1="50" x2="100" y2="50" class="grid-line" />
+        <line x1="0" y1="70" x2="100" y2="70" class="grid-line" />
+        <line x1="0" y1="90" x2="100" y2="90" class="grid-line" />
+      </g>
+    </svg>
+  </div>
+
+  <section class="login-container" role="form" aria-labelledby="loginTitle" aria-live="polite">
+    <h2 id="loginTitle">User Login</h2>
+    <!-- Note: method=POST + action to /login -->
+    <form id="loginForm" method="POST" action="/login" novalidate>
+      <label for="userId">User ID</label>
+      <input
+        type="text"
+        id="userId"
+        name="userID"
+        placeholder="Enter User ID"
+        autocomplete="username"
+        required
+        aria-required="true"
+        value="{{ request.form.userID or '' }}"
+      />
+
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter Password"
+        autocomplete="current-password"
+        required
+        aria-required="true"
+      />
+
+      <!-- Pass selected role from backend -->
+      <input type="hidden" name="role" value="{{ selected_role or '' }}" />
+
+      <!-- Error div for client-side -->
+      <div id="error" class="error-message" role="alert" style="display: none;"></div>
+
+      <!-- Backend error display -->
+      {% if error %}
+        <p style="color:#f87171; margin-bottom:12px;" role="alert">{{ error }}</p>
+      {% endif %}
+
+      <button type="submit">Login</button>
+    </form>
+  </section>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('error');
+
+    form.addEventListener('submit', function (event) {
+      // Clear previous client-side error
+      errorDiv.style.display = 'none';
+      errorDiv.textContent = '';
+
+      const userId = form.userID.value.trim();
+      const password = form.password.value.trim();
+
+      // Client-side validations
+      if (!userId) {
+        event.preventDefault();
+        return showError('User ID is required.');
+      }
+      const alphanumericRegex = /^[a-z0-9]+$/i;
+      if (!alphanumericRegex.test(userId)) {
+        event.preventDefault();
+        return showError('User ID must be alphanumeric.');
+      }
+      if (userId.length < 3) {
+        event.preventDefault();
+        return showError('User ID must be at least 3 characters.');
+      }
+
+      if (!password) {
+        event.preventDefault();
+        return showError('Password is required.');
+      }
+      if (password.length < 6) {
+        event.preventDefault();
+        return showError('Password must be at least 6 characters.');
+      }
+      const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+      if (!specialCharRegex.test(password)) {
+        event.preventDefault();
+        return showError('Password must contain at least one special character.');
+      }
+
+      // No client-side redirect here; let server handle actual login and redirects
+    });
+
+    function showError(message) {
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+    }
+  </script>
+
+</body>
+</html> 

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Resume Analysis Results</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+  body {
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg, #070f7e, #0a1a85, #0a143d);
+    color: #3781cf;
+    margin: 0;
+    padding: 1rem;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  #sciFiBg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    background: #062451;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px #1369d1;
+  }
+
+  .button-container {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .button-container button {
+    background: #00ffff;
+    border: none;
+    color: #002b36;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00ffff;
+    transition: background 0.3s ease;
+  }
+
+  .button-container button:hover {
+    background: #f3f3f5;
+  }
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  .left-report {
+    flex: 1 1 400px;
+    max-width: 600px;
+    overflow-y: auto;
+    max-height: 80vh;
+  }
+
+  .resume-box {
+    background: rgba(0, 255, 255, 0.15);
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px #0e65d7aa;
+  }
+
+  .resume-box p {
+    margin: 0.25rem 0;
+  }
+
+  .resume-box ul {
+    margin: 0.25rem 0 1rem 1.5rem;
+  }
+
+  .suggestion-list li {
+    color: #ff4d4d;
+  }
+
+  .resume-box button {
+    background: #08235c;
+    color: #749ad7;
+    border: 1px solid #00ffff;
+    padding: 8px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .resume-box button:hover {
+    background: #103591;
+    color: #001f22;
+  }
+
+  .right-visuals {
+    flex: 1 1 350px;
+    max-width: 400px;
+    background: rgba(0,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 20px #273eb1aa;
+    overflow-y: auto;
+    max-height: 80vh;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<canvas id="sciFiBg"></canvas>
+
+<h1>Resume Analysis Results</h1>
+
+<div class="button-container">
+  <a href="{{ url_for('dashboard') }}"><button>Back to Dashboard</button></a>
+  <a href="{{ url_for('shortlisted_candidates') }}"><button>View Shortlisted</button></a>
+  <a href="{{ url_for('logout') }}"><button>Logout</button></a>
+</div>
+
+<div class="container">
+  <div class="left-report">
+    {% for r in resumes %}
+    <div class="resume-box">
+      <p><strong>Name:</strong> {{ r.name }}</p>
+      <p><strong>Email:</strong> {{ r.email }}</p>
+      <p><strong>Phone:</strong> {{ r.phone }}</p>
+      <p><strong>ATS Score:</strong> {{ r.score }}%</p>
+      <p><strong>Matched Keywords:</strong> {{ r.matched_keywords|join(', ') }}</p>
+      <p><strong>Missing Keywords:</strong> {{ r.missing_keywords|join(', ') }}</p>
+      <p><strong>Suggestions:</strong></p>
+      <ul class="suggestion-list">
+        {% for s in r.improvement_suggestions %}
+        <li>{{ s }}</li>
+        {% endfor %}
+      </ul>
+      <a href="{{ url_for('download_resume', filename=r.filename) }}"><button>Download Resume</button></a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="right-visuals">
+    {% for r in resumes %}
+    <div style="margin-bottom: 2rem;">
+      <h3 style="text-align:center; font-size:1.2rem;">{{ r.name }}'s Keyword Analysis</h3>
+      <canvas id="chart-{{ loop.index0 }}"></canvas>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  const resumes = {{ resumes|tojson }};
+  resumes.forEach((resume, index) => {
+    const ctx = document.getElementById(`chart-${index}`).getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Matched Keywords', 'Missing Keywords'],
+        datasets: [{
+          label: `${resume.name}'s Keywords`,
+          data: [resume.matched_keywords.length, resume.missing_keywords.length],
+          backgroundColor: ['#00ffff', '#ff4d4d']
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  });
+</script>
+
+<script>
+  // Sci-Fi Blue Grid Background Animation
+  const canvas = document.getElementById('sciFiBg');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  const gridSpacing = 50;
+  let offset = 0;
+
+  function drawGrid() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(0, 255, 255, 0.15)';
+    ctx.lineWidth = 1;
+
+    for (let x = -offset % gridSpacing; x < canvas.width; x += gridSpacing) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
+
+    for (let y = -offset % gridSpacing; y < canvas.height; y += gridSpacing) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+
+    offset += 0.5;
+    requestAnimationFrame(drawGrid);
+  }
+
+  drawGrid();
+</script>
+
+</body>
+</html>

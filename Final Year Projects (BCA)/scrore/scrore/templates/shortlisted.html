@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shortlisted Candidates</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+  body {
+    font-family: 'Orbitron', sans-serif;
+    margin: 0;
+    padding: 2rem;
+    color: #00ffff;
+    background: #000814;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  canvas#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 12px #00ffff, 0 0 24px #00ffff88;
+  }
+
+  .button-container {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .button-container button {
+    background: #00ffff;
+    border: none;
+    color: #001f22;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 12px #00ffff, 0 0 24px #00ffff55;
+    transition: transform 0.3s ease;
+  }
+
+  .button-container button:hover {
+    transform: scale(1.05);
+    background: #00bbbb;
+  }
+
+  .resume-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid #00ffff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 18px #00ffff44;
+    backdrop-filter: blur(3px);
+    transition: transform 0.3s ease;
+  }
+
+  .resume-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px #00ffffaa;
+  }
+
+  .resume-details {
+    flex: 1;
+  }
+
+  .progress-container {
+    width: 160px;
+    margin-left: 20px;
+    text-align: center;
+  }
+
+  .progress-label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 18px;
+    background: #001f22;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 8px #00ffff88 inset;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ffff, #00ffaa);
+    animation: progressAnim 2s ease-out forwards;
+  }
+
+  @keyframes progressAnim {
+    from {
+      width: 0;
+    }
+  }
+
+  /* Style the Email Confirmation button inside each resume */
+  .email-confirm-btn {
+    margin-top: 10px;
+    background: #00ffff;
+    color: #001f22;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 12px #00ffff, 0 0 24px #00ffff88;
+    transition: background 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .email-confirm-btn:hover {
+    background: #00bbbb;
+    transform: scale(1.05);
+  }
+
+  p {
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<h1>Shortlisted Candidates</h1>
+
+<div class="button-container">
+  <a href="{{ url_for('results') }}"><button>Back to Results</button></a>
+  <a href="{{ url_for('logout') }}"><button>Logout</button></a>
+  <a href="{{ url_for('choose_role') }}"><button>Interviewer</button></a>
+</div>
+
+{% if resumes %}
+  {% for r in resumes %}
+  <div class="resume-box">
+    <div class="resume-details">
+      <strong>Name:</strong> {{ r.name }}<br />
+      <strong>ATS Score:</strong> {{ r.score }}%<br />
+      <strong>Matched Keywords:</strong> {{ r.matched_keywords|join(', ') }}<br />
+      
+      <a href="{{ url_for('email_form', to_email=r.email) }}" class="email-confirm-btn">
+        Email Confirmation
+      </a>
+    </div>
+    <div class="progress-container">
+      <div class="progress-label">ATS Progress</div>
+      <div class="progress-bar">
+        <div class="progress-bar-fill" style="width: {{ r.score }}%;"></div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <p>No candidates scored above 55%.</p>
+{% endif %}
+
+<script>
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  const gridSize = 50;
+  let offset = 0;
+
+  function drawGrid() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+    ctx.lineWidth = 1;
+
+    for (let x = -offset % gridSize; x < canvas.width; x += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
+
+    for (let y = -offset % gridSize; y < canvas.height; y += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+
+    offset += 0.3;
+    requestAnimationFrame(drawGrid);
+  }
+
+  drawGrid();
+</script>
+
+</body>
+</html>

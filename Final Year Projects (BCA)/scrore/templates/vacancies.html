@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Available Roles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(ellipse at center, #0b0f2b, #060c30, #02041e);
+      color: #00ffff;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 255, 255, 0.03) 0,
+        rgba(0, 255, 255, 0.03) 1px,
+        transparent 1px,
+        transparent 20px
+      );
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.8rem;
+      margin-bottom: 2rem;
+      color: #00ffff;
+      text-shadow: 0 0 15px #00ffffaa;
+      z-index: 1;
+      position: relative;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #00ffff66; }
+      to { text-shadow: 0 0 20px #00ffffcc; }
+    }
+
+    .roles-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      z-index: 1;
+      position: relative;
+    }
+
+    .role-card {
+      background: rgba(0, 255, 255, 0.08);
+      border: 1px solid #00ffff55;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 0 20px #00ffff33;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .role-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px #00ffff88;
+    }
+
+    .role-image {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1rem;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #00ffff55;
+      box-shadow: 0 0 12px #00ffff55;
+    }
+
+    .role-title {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #00ffffaa;
+    }
+
+    .apply-btn {
+      background: #00ffff;
+      border: none;
+      color: #000;
+      padding: 0.7rem 1.4rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .apply-btn:hover {
+      background: #00d2d2;
+    }
+
+    .error {
+      color: #ff7f7f;
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Select a Role</h1>
+
+  <div class="roles-container">
+    {% for role in roles %}
+    <div class="role-card">
+      {% if "Front-End" in role %}
+        <img src="https://cdn-icons-png.flaticon.com/512/2721/2721291.png" class="role-image" alt="Front-End Developer">
+      {% elif "Data Analyst" in role %}
+        <img src="https://cdn-icons-png.flaticon.com/512/1087/1087920.png" class="role-image" alt="Data Analyst">
+      {% elif "DevOps" in role %}
+        <img src="https://cdn-icons-png.flaticon.com/512/4248/4248443.png" class="role-image" alt="DevOps Engineer">
+      {% elif "UI/UX" in role %}
+        <img src="https://cdn-icons-png.flaticon.com/512/3050/3050525.png" class="role-image" alt="UI/UX Designer">
+      {% elif "Web Developer" in role %}
+        <img src="https://cdn-icons-png.flaticon.com/512/2721/2721279.png" class="role-image" alt="Web Developer">
+      {% elif "Software Engineer" in role %}
+        <img src="https://cdn-icons-png.flaticon.com/512/2721/2721318.png" class="role-image" alt="Software Engineer">
+      {% else %}
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="role-image" alt="Default Role">
+      {% endif %}
+      <div class="role-title">{{ role }}</div>
+      <form method="GET" action="/dashboard">
+        <input type="hidden" name="role" value="{{ role }}">
+        <button type="submit" class="apply-btn">Apply Now</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if error %}
+  <div class="error">{{ error }}</div>
+  {% endif %}
+
+</body>
+</html>

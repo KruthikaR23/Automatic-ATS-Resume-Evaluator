@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ATS Score Evaluator</title>
+
+  <!-- Font Awesome CDN for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0f2e77;
+      color: white;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle, #07296c 10%, #010f2a 100%);
+      animation: pulse 8s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(1.1); }
+    }
+
+    .breadcrumbs {
+      position: fixed;
+      top: 20px;
+      right: 40px;
+      display: flex;
+      gap: 24px;
+      font-size: 1rem;
+      z-index: 999;
+      background: rgba(2, 13, 46, 0.4);
+      padding: 10px 20px;
+      border-radius: 30px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 12px #22d3ee66;
+    }
+
+    .breadcrumbs a {
+      color: #a5f3fc;
+      text-decoration: none;
+      font-weight: 600;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .breadcrumbs a::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background-color: #22d3ee;
+      transition: width 0.3s ease-in-out;
+      border-radius: 4px;
+    }
+
+    .breadcrumbs a:hover {
+      color: #22d3ee;
+      text-shadow: 0 0 6px #22d3eecc;
+    }
+
+    .breadcrumbs a:hover::after {
+      width: 100%;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      padding: 40px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .left-section {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .left-section h1 {
+      font-size: 3.5rem;
+      color: #22d3ee;
+      margin-bottom: 20px;
+    }
+
+    .left-section p {
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      margin-bottom: 40px;
+      max-width: 500px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-get-started, .btn-learn-more {
+      padding: 18px 40px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      background: #22d3ee;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 0 12px #22d3eeaa;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-get-started:hover,
+    .btn-learn-more:hover {
+      background: #06b6d4;
+      box-shadow: 0 0 24px #06b6d4cc;
+      transform: scale(1.05);
+    }
+
+    .right-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .laptop-img {
+      width: 150%;
+      max-width: 500px;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px #22d3ee);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .features-section {
+      width: 100%;
+      padding: 120px 40px 80px; /* Top padding increased for center scroll alignment */
+      background: #021d4a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      scroll-margin-top: 120px;
+    }
+
+    .feature-heading {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #22d3ee;
+      text-shadow: 0 0 10px #22d3ee88;
+    }
+
+    .feature-cards {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .flip-card {
+      background-color: transparent;
+      width: 280px;
+      height: 220px;
+      perspective: 1000px;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      box-shadow: 0 0 10px #113c82;
+    }
+
+    .flip-card-front {
+      background-color: #2a5db0;
+      color: #0f172a;
+      font-size: 1.25rem;
+    }
+
+    .flip-card-back {
+      background-color: #0f172a;
+      color: #a5f3fc;
+      transform: rotateY(180deg);
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    footer {
+      background: #010f2a;
+      padding: 30px 0;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Breadcrumb Navigation -->
+  <nav class="breadcrumbs">
+    <a href="{{ url_for('login') }}"><i class="fas fa-right-to-bracket"></i> Login</a>
+    <a href="{{ url_for('about') }}"><i class="fas fa-circle-info"></i> About Us</a>
+    <a href="#features"><i class="fas fa-lightbulb"></i> Learn More</a>
+  </nav>
+
+  <div class="container">
+    <div class="left-section">
+      <h1>ATS Score Evaluator</h1>
+      <p>Analyze and evaluate resumes with AI-powered Applicant Tracking System scoring. Streamline hiring with smart screening and data-driven insights.</p>
+      <div class="button-group">
+        <a href="{{ url_for('choose_role') }}" class="btn-get-started">Get Started</a>
+        <a href="#features" class="btn-learn-more">Learn More</a>
+      </div>
+    </div>
+    <div class="right-section">
+      <img src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" alt="AI scanning laptop" class="laptop-img"/>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-section" id="features">
+    <h2 class="feature-heading">Advanced Key Features</h2>
+    <div class="feature-cards">
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">Smart Resume Parsing</div>
+          <div class="flip-card-back">
+            Extracts key info from resumes like name, contact, skills, education, and work experience using NLP.
+          </div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">Role-Based Scoring</div>
+          <div class="flip-card-back">Scores resumes based on job-specific keywords and skills defined by the recruiter or HR team.</div>
+        </div>
+      </div>
+      
+      <div class ="flip-card">
+        <div class="flip-card-front">
+          <div class="flip-card-inner">User Friendly</div>
+          <div class="flip-card-back">it easy for the user to use and manage.</div>
+        </div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">Bulk Upload Support</div>
+          <div class="flip-card-back">Upload and analyze multiple resumes at once to save time and increase screening efficiency.</div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">Shortlisting Automation</div>
+          <div class="flip-card-back">Automatically filters and highlights candidates who meet the defined scoring threshold.</div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">Visual ATS Dashboard</div>
+          <div class="flip-card-back">Shows candidate scores and breakdowns with intuitive charts, bars, and progress indicators.</div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">Email Integration</div>
+          <div class="flip-card-back">Allows sending confirmation or rejection emails directly to candidates from the platform.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Made with ❤️ by people who care.<br>
+    © 2025. All rights reserved.
+  </footer>
+</body>
+</html>

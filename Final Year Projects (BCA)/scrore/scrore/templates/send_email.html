@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Send Email Confirmation</title>
+</head>
+<body>
+    <h1>Send Email Confirmation</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li style="color: {% if category == 'success' %}green{% else %}red{% endif %};">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="to_email">To (Candidate Email):</label><br/>
+        <input type="email" name="to_email" id="to_email" required /><br/><br/>
+
+        <label for="subject">Subject:</label><br/>
+        <input type="text" name="subject" id="subject" required /><br/><br/>
+
+        <label for="body">Body:</label><br/>
+        <textarea name="body" id="body" rows="8" cols="40" required></textarea><br/><br/>
+
+        <button type="submit">Send Email</button>
+    </form>
+</body>
+</html>

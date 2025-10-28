@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Choose Your Role - ATS Evaluator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0a0f2f;
+    color: #cbd5e1;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+  }
+
+  /* Background Grid */
+  .background-grid {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.12;
+  }
+
+  .background-grid svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .grid-line {
+    stroke: #3b82f6;
+    stroke-width: 0.4;
+    stroke-dasharray: 4,6;
+  }
+
+  /* Container */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    width: 80%;
+    background: rgba(30, 41, 59, 0.85);
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 0 25px #2563ebcc;
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 1s ease forwards;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    color: #60a5fa;
+    margin-bottom: 40px;
+    text-shadow: 0 0 10px #3b82f6;
+  }
+
+  /* Roles Grid */
+  .roles {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Role Card */
+  .role-card {
+    flex: 1 1 260px;
+    background: #1e293b;
+    border-radius: 20px;
+    padding: 40px 20px;
+    cursor: pointer;
+    color: #60a5fa;
+    box-shadow: 0 0 15px #3b82f6aa;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .role-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, #2563eb, #3b82f6, #60a5fa, #2563eb);
+    animation: rotateGlow 6s linear infinite;
+    filter: blur(30px);
+    opacity: 0.4;
+    z-index: 0;
+    border-radius: 20px;
+  }
+
+  .role-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .role-card:hover,
+  .role-card:focus-visible {
+    transform: translateY(-12px);
+    box-shadow: 0 0 40px #60a5faaa;
+    outline: none;
+  }
+
+  /* Role Title */
+  .role-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: 1.2px;
+  }
+
+  /* Role Description */
+  .role-desc {
+    font-size: 1.05rem;
+    color: #94a3b8;
+  }
+
+  /* Link style to fill card */
+  a.role-link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes rotateGlow {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+
+    .roles {
+      gap: 25px;
+    }
+
+    .role-card {
+      padding: 30px 15px;
+    }
+
+    .role-title {
+      font-size: 1.6rem;
+    }
+
+    .role-desc {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="background-grid" aria-hidden="true">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" >
+      <g>
+        <line x1="10" y1="0" x2="10" y2="100" class="grid-line" />
+        <line x1="30" y1="0" x2="30" y2="100" class="grid-line" />
+        <line x1="50" y1="0" x2="50" y2="100" class="grid-line" />
+        <line x1="70" y1="0" x2="70" y2="100" class="grid-line" />
+        <line x1="90" y1="0" x2="90" y2="100" class="grid-line" />
+      </g>
+      <g>
+        <line x1="0" y1="10" x2="100" y2="10" class="grid-line" />
+        <line x1="0" y1="30" x2="100" y2="30" class="grid-line" />
+        <line x1="0" y1="50" x2="100" y2="50" class="grid-line" />
+        <line x1="0" y1="70" x2="100" y2="70" class="grid-line" />
+        <line x1="0" y1="90" x2="100" y2="90" class="grid-line" />
+      </g>
+    </svg>
+  </div>
+
+  <main class="container" role="main" aria-label="Choose your role">
+    <h1>Choose Your Role</h1>
+    <div class="roles">
+        <a href="/login?role=HR" class="role-link" aria-label="Login as HR">
+        <div class="role-card" tabindex="0">
+          <div class="role-title">HR</div>
+          <div class="role-desc">Manage job openings and review resumes</div>
+        </div>
+      </a>
+      <a href="/login?role=Interviewer" class="role-link" aria-label="Login as Interviewer">
+        <div class="role-card" tabindex="0">
+          <div class="role-title">Interviewer</div>
+          <div class="role-desc">View shortlisted candidates and conduct interviews</div>
+        </div>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

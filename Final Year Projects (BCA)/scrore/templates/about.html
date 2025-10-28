@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | ATS Score Evaluator</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0c0f24;
+      color: #f0f0f0;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: #101740;
+      padding: 20px 40px;
+    }
+
+    .breadcrumbs {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .breadcrumbs a {
+      color: #66ccff;
+      text-decoration: none;
+    }
+
+    .breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      padding: 60px 40px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 40px;
+      color: #66ccff;
+      margin-bottom: 20px;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .intro {
+      font-size: 18px;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 50px;
+      opacity: 0;
+      animation: fadeIn 1.5s ease forwards;
+    }
+
+    .section {
+      margin-bottom: 60px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    .section h2 {
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .section p {
+      line-height: 1.6;
+      color: #cccccc;
+    }
+
+    .team-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .team-card {
+      background-color: #1a1d35;
+      border-radius: 12px;
+      overflow: hidden;
+      width: 250px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 15px rgba(102, 204, 255, 0.1);
+      opacity: 0;
+      animation: fadeUp 1s ease forwards;
+    }
+
+    .team-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .team-card h3 {
+      margin: 15px 0 5px;
+      color: #66ccff;
+    }
+
+    .team-card p {
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 15px;
+    }
+
+    .team-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 25px rgba(102, 204, 255, 0.3);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #101740;
+      color: #888;
+      margin-top: 60px;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 40px 20px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .team-card {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="breadcrumbs">
+      <a href="index.html">&#8592; Back</a> &gt; About Us
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>About Us</h1>
+
+    <div class="section">
+      <h2>Our Mission</h2>
+      <p>
+        To revolutionize the recruitment process by combining AI with human-centric design — enabling faster, fairer.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>What We Do</h2>
+      <p>
+        We provide organizations with tools that automatically parse resumes, extract relevant data, match job descriptions, and generate ATS scores — reducing bias and saving time.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Meet Our Team</h2>
+      <div class="team-grid">
+        <div class="team-grid">
+            <div class="team-card">
+                <img src="{{ url_for('static', filename='images/Oviya.jpg') }}" alt="Oviya V" />
+                <h3>Oviya V</h3>
+                <p>Lead AI Engineer</p>
+            </div>
+            <div class="team-card">
+                <img src="{{ url_for('static', filename='images/Kruthika.jpg') }}" alt="Kruthika" />
+                <h3>Kruthika</h3>
+                <p>Data Scientist</p>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Automated Resume and ATS Score Evaluator. All rights reserved.
+  </footer>
+
+</body>
+</html>
